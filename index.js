@@ -10,15 +10,7 @@ app.get("/", (req, res) => {
 // Proxy all other requests
 app.use((req, res) => {
   const url = `https://www.irflabs.in${req.url}`;
-  request(url, (error, response, body) => {
-    if (error) {
-      res.status(500).send("Error fetching data from the target server.");
-      return;
-    }
-    // Log the response body for debugging
-    console.log("Response from target server:", body);
-    res.send(body);
-  });
+  req.pipe(request(url)).pipe(res);
 });
 
 const PORT = process.env.PORT || 3001;
